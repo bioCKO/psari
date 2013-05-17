@@ -8,7 +8,7 @@
 # For now this is explicitly tied to the Norway spruce genome project products
 # and pipelines.  This will be loosened as pseudogene analyses progress.
 #
-# The name 'psari' is a hat-tip to 'Sari', María Rosario Garcia-Gíl, who has 
+# The name 'psari' is a hat-tip to 'Sari', María Rosario García-Gil, who has 
 # worked on pseudogenes in pine here at UPSC for some time.
 #
 # Douglas G. Scofield, Umeå Plant Sciences Centre, Umeå Sweden
