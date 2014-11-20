@@ -6,7 +6,7 @@
 #SBATCH -J HC-overlap.job
 #SBATCH -p core
 #SBATCH -t 3:00:00
-#SBATCH --mail-user douglas.scofield@plantphys.umu.se
+#SBATCH --mail-user douglas.scofield@ebc.uu.se
 #SBATCH --mail-type=ALL
 
 GFFs=("$@")

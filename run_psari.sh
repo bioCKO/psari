@@ -12,11 +12,11 @@ set -x
 #SBATCH -J pseudo.job
 #SBATCH -p core
 #SBATCH -t 1-00:00:00
-#SBATCH --mail-user douglas.scofield@plantphys.umu.se
+#SBATCH --mail-user douglas.scofield@ebc.uu.se
 #SBATCH --mail-type=ALL
 
 module load bioinfo-tools
-module load BioPerl/1.6.1
+module load BioPerl/1.6.922
 
 TmpID=${SLURM_JOB_ID:-$$}
 

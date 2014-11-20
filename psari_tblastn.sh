@@ -12,13 +12,13 @@ set -x
 #SBATCH -J tblastn.JOB
 #SBATCH -p node -n 8
 #SBATCH -t 3-00:00:00
-#SBATCH --mail-user douglas.scofield@plantphys.umu.se
+#SBATCH --mail-user douglas.scofield@ebc.uu.se
 #SBATCH --mail-type=ALL
 
 TmpID=${SLURM_JOB_ID:-$$}
 
 module load bioinfo-tools
-module load blast/2.2.24+
+module load blast/2.2.29+
 
 Query=$1
 QueryName=$( basename $Query )

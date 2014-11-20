@@ -1,4 +1,4 @@
-## Psari: Pseudogene discovery
+# Psari: Pseudogene discovery
 
 Psari is a pipeline that processes tblastn output to produce a GFF file describing pseudogene candidates in a genome.  Query sequences used for the tblastn are amino acid sequences from high-confidence genes *within the target genome*, while the subject sequence is the genome itself.  The basic steps of the pipeline are:
 
@@ -9,6 +9,6 @@ Psari is a pipeline that processes tblastn output to produce a GFF file describi
 
 The script `run_psari.sh` gives an overview of running the pipeline, once the tblastn results have been gathered.
 
-Psari requires BioPerl 1.6.1 and BEDtools.
+Psari requires BioPerl, BEDtools and awk.
 
-Psari is currently very much tied to the Norway spruce genome project, but I will be generalising the interface in the near future.
+Psari is currently very much tied to the Norway spruce genome project, but I hope to generalise the interface in the near future.
