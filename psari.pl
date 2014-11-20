@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # Determine pseudogene candidates by tiling and filtering tblastn output, where
 # queries are the amino acid sequences of functional/high-confidence genes, and
@@ -29,13 +29,15 @@
 #
 # CHANGELOG
 #
+# 2014-11-20
+# - little updates, not yet generalised
 # 2013-05-17
 # - initial upload to github
 # 2012-12-12
 # - completion for genome paper
 
-use warnings;
 use strict;
+use warnings;
 
 use Data::Dumper;
 $Data::Dumper::Sortkeys = 1;
@@ -50,10 +52,6 @@ use Bio::Search::Result::BlastResult;
 #use Bio::Search::BlastUtils;
 #use Bio::Search::Tiling::MapTiling;
 #use Bio::Search::Tiling::MapTileUtils;
-#use DougMapTiling;
-#use DougMapTileUtils;
-#$DougMapTileUtils::_but_one = 1;  # we want the but_one versions
-#use Sort::Naturally;
 
 # ----------------------------
 
@@ -147,40 +145,49 @@ my $max_gap_length = 12338; # max gap between two subject hits for them to be jo
 my $num_filter_max_gap_length = 0;
 
 sub final_report() {
-    print STDERR "\n";
-    print STDERR "Pseudogene pipeline                                         = $this_pipeline\n";
-    print STDERR "Blast algorithm used to generate HSPs                       = $candidate_algorithm\n";
-    print STDERR "NOTE: I tried to avoid AA query/nt subject assumptions but it hasn't been tested with $candidate_algorithm...\n" if $candidate_algorithm ne "TBLASTN";
-    print STDERR "\n";
-    print STDERR "Total number of source/query sequences used in the search   = $num_sources\n";
-    print STDERR "Total number of hits                                        = $num_hits\n";
-    print STDERR "Total number of HSPs within hits                            = $num_hsps\n";
-    print STDERR "Total number of candidates passing filtering                = $num_candidates\n";
-    print STDERR "Total number of blocks within candidates                    = $num_blocks\n";
-    print STDERR "Total number of stops '$stopchar' observed in candidates           = $num_stop_codons_in_candidates\n";
-    print STDERR "Candidates per source                                       = ", sprintf("%.3f\n", ($num_candidates / $num_sources));
-    print STDERR "\n";
-    print STDERR "Parameters and results for trimming of overlapping HSPs:\n";
-    print STDERR "trim_units when overlap detected [query, subject]           = ", join(", ", @trim_units),"\n";
-    print STDERR "query_overlap allowed                                       = $query_overlap\n";
-    print STDERR "num_query_overlap_trim [upstream block, downstream block]   = ",sum(@num_query_overlap_trim)," [", join(", ", @num_query_overlap_trim),"]\n";
-    print STDERR "subject_overlap allowed                                     = $subject_overlap\n";
-    print STDERR "num_subject_overlap_trim [upstream block, downstream block] = ",sum(@num_subject_overlap_trim)," [", join(", ", @num_subject_overlap_trim),"]\n";
-    print STDERR "\n";
-    print STDERR "Filtering results:\n";
-    print STDERR "num_filter_min_frac_identical_hsp                   [< $min_frac_identical] = $num_filter_min_frac_identical_hsp\n";
-    print STDERR "num_filter_single_hit_length                         [< $min_single_hit_length] = $num_filter_single_hit_length\n";
-    print STDERR "num_filter_overlap_filter_bits                              = $num_filter_overlap_filter_bits\n";
-    print STDERR "num_filter_min_source_aligned_length_candidate       [< $min_source_aligned_length_candidate] = $num_filter_min_source_aligned_length_candidate\n";
-    print STDERR "num_filter_max_gap_length                         [> $max_gap_length] = $num_filter_max_gap_length\n";
-    print STDERR "num_filter_min_frac_covered_candidate               [< $min_frac_covered_candidate] = $num_filter_min_frac_covered_candidate\n";
-    print STDERR "num_filter_min_covered_frac_identical_candidate     [< $min_covered_frac_identical_candidate] = $num_filter_min_covered_frac_identical_candidate\n";
-    my $tot = 0;
-    $tot = $num_filter_min_frac_identical_hsp + $num_filter_single_hit_length 
-           + $num_filter_overlap_filter_bits + $num_filter_min_source_aligned_length_candidate 
-           + $num_filter_max_gap_length + $num_filter_min_frac_covered_candidate
-           + $num_filter_min_covered_frac_identical_candidate;
-    print STDERR "Total number of filtering events                            = $tot\n";
+    print STDERR "
+Pseudogene pipeline                                         = $this_pipeline
+Blast algorithm used to generate HSPs                       = $candidate_algorithm\n";
+    print STDERR "
+NOTE: I tried to avoid AA query/nt subject assumptions but it hasn't been tested with $candidate_algorithm...\n" if $candidate_algorithm ne "TBLASTN";
+    print STDERR "
+--
+
+Total number of source/query sequences used in the search   = $num_sources
+Total number of hits                                        = $num_hits
+Total number of HSPs within hits                            = $num_hsps
+Total number of candidates passing filtering                = $num_candidates
+Total number of blocks within candidates                    = $num_blocks
+Total number of stops '$stopchar' observed in candidates           = $num_stop_codons_in_candidates
+Candidates per source                                       = ".sprintf("%.3f\n", ($num_candidates / $num_sources))."
+
+--
+
+Parameters and results for trimming of overlapping HSPs:
+
+trim_units when overlap detected [query, subject]           = ".join(", ", @trim_units) . "
+query_overlap allowed                                       = $query_overlap
+num_query_overlap_trim [upstream block, downstream block]   = ".sum(@num_query_overlap_trim)." [".join(", ", @num_query_overlap_trim)."]
+subject_overlap allowed                                     = $subject_overlap
+num_subject_overlap_trim [upstream block, downstream block] = ".sum(@num_subject_overlap_trim)." [".join(", ", @num_subject_overlap_trim)."]
+
+--
+
+Filtering results:
+
+num_filter_min_frac_identical_hsp                   [< $min_frac_identical] = $num_filter_min_frac_identical_hsp
+num_filter_single_hit_length                         [< $min_single_hit_length] = $num_filter_single_hit_length
+num_filter_overlap_filter_bits                              = $num_filter_overlap_filter_bits
+num_filter_min_source_aligned_length_candidate       [< $min_source_aligned_length_candidate] = $num_filter_min_source_aligned_length_candidate
+num_filter_max_gap_length                         [> $max_gap_length] = $num_filter_max_gap_length
+num_filter_min_frac_covered_candidate               [< $min_frac_covered_candidate] = $num_filter_min_frac_covered_candidate
+num_filter_min_covered_frac_identical_candidate     [< $min_covered_frac_identical_candidate] = $num_filter_min_covered_frac_identical_candidate\n";
+    my $tot = $num_filter_min_frac_identical_hsp + $num_filter_single_hit_length 
+                + $num_filter_overlap_filter_bits + $num_filter_min_source_aligned_length_candidate 
+                + $num_filter_max_gap_length + $num_filter_min_frac_covered_candidate
+                + $num_filter_min_covered_frac_identical_candidate;
+    print STDERR "
+Total number of filtering events                            = $tot\n";
 }
 
 
